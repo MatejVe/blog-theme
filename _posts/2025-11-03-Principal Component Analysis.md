@@ -51,3 +51,16 @@ Interpretation of this fact (theorem) may be that if we wish to reduce the dimen
 3. The transformation $Z = B^\prime X$ is a rotation of the coordinate axes. If we take a look at $$ x^\prime \Sigma x = x^\prime B^\prime \Lambda B x = z^\prime \Lambda z = \sum_{i=1}^p \frac{z_i^2}{1/\lambda_i} $$ and set it to a constant, i.e. $\sum_{i=1}^p \frac{z_i^2}{1/\lambda_i} = C$ we recognize an ellipse equation. The i-th principal component defines an ellipse axis with length $\sqrt{C/\lambda_i}$. 
 
 ![PCA ellipse](../assets/images/PCA_elipse.png)
+
+## Inference
+
+Consider now a sample of size $N$, $x_1, \dots, x_n$ iid drawn from some multivariate $p$-dimensional ($p<N$) distribution $X$ with $Var(X) = \Sigma$. This matrix $\Sigma$ has $p$ different characteristic roots, i.e. eigenvalues $\lambda_1, \dots, \lambda_p$ and eigenvectors $\beta_1, \dots, \beta_p$ as before.
+
+In case that $X \sim \mathcal{N} (\mu, \Sigma)$, the set of maximum likelihood estimators of $\lambda_i$ and $\beta_i$ consists of the roots $l_1 > \dots > l_p$ of $$ |\hat{\Sigma} - lI| = 0 $$ and the corresponding mutually orthogonal vectors $b_1, \dots, b_p$ ($b_i^\prime b_i = 1$ and $b_i^\prime b_j = 0$) satisfy $$ (\hat{\Sigma} - l_i I) b_i = 0, $$
+where $\hat{\Sigma}$ is the maximum likelihood estimate of $\Sigma$. Usually, we denote $\hat{\Sigma}$ by $S = \frac{1}{N} \sum_{i=1}^N (x_i - \overline{x})(x_i - \overline{x})^\prime$.
+
+For general distributions, this matrix $S$ is not the MLE, but it remains a consistent estimator of $\Sigma$ under mild moment conditions. The PCA eigenvalues and eigenvectors of $S$ can still be analyzed asymptotically.
+
+The most general result of the asymptotic eigenvalue distribution is $$ \sqrt{N} (l_i - \lambda_i) \xrightarrow{d} \mathcal{N} (0, \sigma_i^2) $$ where $$ \sigma_i^2 = Var((\beta_i^\prime X)^2). $$ The distribution of the eigenvectors is more complicated. If $X \sim \mathcal{N} (0, \Sigma)$, there are nicer closed form solutions: $$ \sqrt{N} (l_i - \lambda_i) \xrightarrow{d} \mathcal{N} (0, 2\lambda_i^2) $$ and $$ \sqrt{N} (b_i - \beta_i) \xrightarrow{d} \mathcal{N} (0, \sum_{k\neq i} \frac{\lambda_i \lambda_k}{(\lambda_i - \lambda_k)^2} \beta_k \beta_k^\prime). $$
+
+To illustrate the asymptotic distributions, let's do a Monte Carlo simulation on a 2-dimensional probability distribution. We take a bivariate t-distribution, that is $$ X = \frac{Z}{\sqrt{W / \nu}}, \hspace{0.5cm} Z \sim \mathcal{N} (0, \Sigma), \hspace{0.5cm}, W \sim \chi_\nu^2, $$ where $\nu$ denotes the degrees of freedom. Set $$ \Sigma = \begin{pmatrix} 1 & 0.8 \\ 0.8 & 1 \end{pmatrix} $$ and $\nu = 5$.
